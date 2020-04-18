@@ -39,6 +39,6 @@ public class Server {
     }
     public static void main(String[] args) throws IOException {
         Server server = new Server();
-        server.start(0000);
+        server.start(0101);
     }
 }
