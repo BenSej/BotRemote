@@ -4,13 +4,13 @@ import java.net.*;
 import java.io.*;
 
 public class Server {
-    private ServerSocket serverSocket;
-    private Socket clientSocket;
-    private PrintWriter out;
-    private BufferedReader in;
-    private boolean receiving;
+    private static ServerSocket serverSocket;
+    private static Socket clientSocket;
+    private static PrintWriter out;
+    private static BufferedReader in;
+    private static boolean receiving;
 
-    public void start(int port) throws IOException {
+    private void start(int port) throws IOException {
         serverSocket = new ServerSocket(port);
         clientSocket = serverSocket.accept();
         System.out.println("connected");
@@ -18,19 +18,25 @@ public class Server {
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         out = new PrintWriter(clientSocket.getOutputStream());
         String message = in.readLine();
-        while (receiving) {
-            if (message.equals("moveForward")) {
+        while (receiving) switch (message) {
+            case "moveForward":
                 Bot.moveForward();
-            }
-            if (message.equals("stop")) {
+                break;
+            case "stop":
                 Bot.stop();
-            } else {
+                break;
+            case "moveRight":
+                Bot.moveRight();
+                break;
+            case "moveLeft":
+                Bot.moveLeft();
+                break;
+            default:
                 out.println("bad message");
                 return;
-            }
         }
     }
-    public void stop() throws IOException {
+    static void stop() throws IOException {
         in.close();
         out.close();
         clientSocket.close();
@@ -39,6 +45,6 @@ public class Server {
     }
     public static void main(String[] args) throws IOException {
         Server server = new Server();
-        server.start(0101);
+        server.start(6000);
     }
 }
