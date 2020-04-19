@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private Button disconnect;
     private Button moveRight;
     private Button moveLeft;
+    private Button moveBackward;
     private TextView connectionStatus;
     private char[] connected = "Connected".toCharArray();
     private char[] disconnected = "Disconnected".toCharArray();
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         connectionStatus = findViewById(R.id.connectionStatus);
         moveRight = findViewById(R.id.rightButton);
         moveLeft = findViewById(R.id.leftButton);
+        moveBackward = findViewById(R.id.reverseButton);
 
         connect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,6 +54,17 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     Client.sendMessage("forward");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        moveBackward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Client.sendMessage("moveBackward");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

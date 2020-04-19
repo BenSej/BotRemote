@@ -11,9 +11,9 @@ class Client {
         out = new PrintWriter(clientSocket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
-    static String sendMessage(String message) throws IOException {
+    static void sendMessage(String message) throws IOException {
         out.println(message);
-        return "Returned: " + in.readLine();
+        in.readLine();
     }
     static void stopConnection() throws IOException{
         in.close();

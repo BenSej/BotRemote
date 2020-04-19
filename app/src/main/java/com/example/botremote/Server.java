@@ -31,6 +31,9 @@ public class Server {
             case "moveLeft":
                 Bot.moveLeft();
                 break;
+            case "moveBackward":
+                Bot.moveBackward();
+                break;
             default:
                 out.println("bad message");
                 return;
