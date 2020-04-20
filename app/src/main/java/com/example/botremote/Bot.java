@@ -1,30 +1,67 @@
-package com.example.botremote;
+import java.net.*;
+import java.io.*;
+import com.pi4j.*;
 
-import com.pi4j.io.gpio.GpioController;
-import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.PinState;
-import com.pi4j.io.gpio.RaspiPin;
+class Server {
+    private static ServerSocket serverSocket;
+    private static Socket clientSocket;
+    private static BufferedReader in;
 
-public class Bot {
-
-    public static void main(String[] args) throws InterruptedException {
-        //create gpio controller 1
-        final GpioController gpio1 = GpioFactory.getInstance();
-        //create gpio controller 2
-        final GpioController gpio2 = GpioFactory.getInstance();
-        //provision gpio pin #01 as an output pin and turn off
-        final GpioPinDigitalOutput pin1 = gpio1.ProvisionDigitalOutputPin(RaspiPin.GPIO_01, "Right", PinState.LOW);
-        //provision gpio pin#02 as an output pin and turn off
-        final GpioPinDigitalOutput pin2 = gpio2.ProvisionDigitalOutputPin(RaspiPin.GPIO_02, "Left", PinState.LOW);
+    private void start(int port) throws IOException {
+        serverSocket = new ServerSocket(port);
+        clientSocket = serverSocket.accept();
+        System.out.println("Connected");
+        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        String message = "";
+        while ((message = in.readLine()) != null) {
+            switch (message) {
+                case "moveForward":
+                    System.out.println("Bot Moving Forwards");
+                    Bot.moveForward();
+                    break;
+                case "moveBackward":
+                    System.out.println("Bot Moving Backwards");
+                    Bot.moveBackward();
+                    break;
+                case "moveRight":
+                    System.out.println("Bot Moving Right");
+                    Bot.moveRight();
+                    break;
+                case "moveLeft":
+                    System.out.println("Bot Moving Left");
+                    Bot.moveLeft();
+                    break;
+                case "stop":
+                    System.out.println("Bot Stopped");
+                    Bot.stop();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
-    public static void moveForward() {
-        pin1.HIGH();
-        pin2.HIGH();
+    public static void main(String[] args) throws IOException {
+        Server server = new Server();
+        server.start(6197);
     }
-    public static void stop() {
-        pin1.LOW();
-        pin2.LOW();
+}
+
+class Bot {
+    
+    static GpioController gpio2 = GpioFactory.getInstance();
+    static GpioPinDigitalOutput pin2 = gpio2.provisionDigitalOutputPin(RaspiPin.GPIO_02, "Right", PinState.LOW);
+    static GpioController gpio1 = GpioFactory.getInstance();
+    static GpioPinDigitalOutput pin1 = gpio1.provisionDigitalOutputPin(RaspiPin.GPIO_01, "Left", PinState.LOW);
+    
+    static void moveForward() {
+    }
+    static void stop() {
+    }
+    static void moveRight() {
+    }
+    static void moveLeft() {
+    }
+    static void moveBackward() {
     }
 }
