@@ -55,6 +55,7 @@ class Bot {
     static GpioPinDigitalOutput pin1 = gpio1.provisionDigitalOutputPin(RaspiPin.GPIO_01, "Left", PinState.LOW);
     
     static void moveForward() {
+        return;
     }
     static void stop() {
     }
