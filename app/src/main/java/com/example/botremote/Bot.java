@@ -1,68 +1,75 @@
-import java.net.*;
-import java.io.*;
-import com.pi4j.*;
-
-class Server {
-    private static ServerSocket serverSocket;
-    private static Socket clientSocket;
-    private static BufferedReader in;
-
-    private void start(int port) throws IOException {
-        serverSocket = new ServerSocket(port);
-        clientSocket = serverSocket.accept();
-        System.out.println("Connected");
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        String message = "";
-        while ((message = in.readLine()) != null) {
-            switch (message) {
-                case "moveForward":
-                    System.out.println("Bot Moving Forwards");
-                    Bot.moveForward();
-                    break;
-                case "moveBackward":
-                    System.out.println("Bot Moving Backwards");
-                    Bot.moveBackward();
-                    break;
-                case "moveRight":
-                    System.out.println("Bot Moving Right");
-                    Bot.moveRight();
-                    break;
-                case "moveLeft":
-                    System.out.println("Bot Moving Left");
-                    Bot.moveLeft();
-                    break;
-                case "stop":
-                    System.out.println("Bot Stopped");
-                    Bot.stop();
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    public static void main(String[] args) throws IOException {
-        Server server = new Server();
-        server.start(6197);
-    }
-}
+import com.pi4j.io.gpio.*;
 
 class Bot {
-    
-    static GpioController gpio2 = GpioFactory.getInstance();
-    static GpioPinDigitalOutput pin2 = gpio2.provisionDigitalOutputPin(RaspiPin.GPIO_02, "Right", PinState.LOW);
-    static GpioController gpio1 = GpioFactory.getInstance();
-    static GpioPinDigitalOutput pin1 = gpio1.provisionDigitalOutputPin(RaspiPin.GPIO_01, "Left", PinState.LOW);
-    
+    private boolean stopped = true;
+    static GpioController eOne = GpioFactory.getInstance();
+    static GpioController eTwo = GpioFactory.getInstance();
+    static GpioController iOne = GpioFactory.getInstance();
+    static GpioController iTwo = GpioFactory.getInstance();
+    static GpioController iThree = GpioFactory.getInstance();
+    static GpioController iFour = GpioFactory.getInstance();
+    static GpioPinDigitalOutput enableOne = eOne.provisionDigitalOutputPin(RaspiPin.GPIO_04, "enableOne", PinState.LOW);
+    static GpioPinDigitalOutput enableTwo = eTWo.provisionDigitalOutputPin(RaspiPin.GPIO_18, "enableTwo", PinState.LOW);
+    static GpioPinDigitalOutput inOne = iOne.provisionDigitalOutputPin(RaspiPin.GPIO_02, "inOne", PinState.LOW);
+    static GpioPinDigitalOutput inTwo = iTwo.provisionDigitalOutputPin(RaspiPin.GPIO_03, "inTwo", PinState.LOW);
+    static GpioPinDigitalOutput inThree = iThree.provisionDigitalOutputPin(RaspiPin.GPIO_14, "inThree", PinState.LOW);
+    static GpioPinDigitalOutput inFour = iFour.provisionDigitalOutputPin(RaspiPin.GPIO_15, "inFour", PinState.LOW);
+
     static void moveForward() {
-        return;
+        if (stopped) {
+            stopped = false;
+            //configure first motor current for forward movement
+            inOne.high();
+            //configure second motor current for forward movement
+            inThree.high();
+            //enable both motors
+            enableOne.high();
+            enableTwo.high();
+        }
     }
     static void stop() {
+        //diable all current flow and disable motors
+        inOne.low();
+        inTwo.low();
+        inThree.low();
+        inFour.low();
+        enableOne.low();
+        enableTwo.low();
+        stopped = true;
     }
     static void moveRight() {
+        if (stopped) {
+            stopped = false;
+            //configure first motor current for forward movement
+            inOne.high();
+            //configure second motor current for backward movement
+            inFour.high();
+            //enable both motors
+            enableOne.high();
+            enableTwo.high();
+        }
     }
     static void moveLeft() {
+        if (stopped) {
+            stopped = false;
+            //configure first motor for backward movement
+            inTwo.high();
+            //configure second motor for forward movement
+            inThree.high();
+            //enable both motors
+            enableOne.high();
+            enableTwo.high();
+        }
     }
     static void moveBackward() {
+        if (stopped) {
+            //configure first motor current for backward movement
+            inTwo.high();
+            //configure second motor current for backward movement
+            inFour.high();
+            //enable both motors
+            enableOne.high();
+            enableTwo.high();
+        }
     }
 }
