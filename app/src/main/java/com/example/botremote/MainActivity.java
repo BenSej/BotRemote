@@ -1,25 +1,16 @@
 package com.example.botremote;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import java.io.IOException;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-    private Button connect;
-    private Button forward;
-    private Button stop;
-    private Button moveRight;
-    private Button moveLeft;
-    private Button moveBackward;
-    private TextView connectionStatus;
-    private char[] connected = "Connected".toCharArray();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,22 +19,21 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        connect = findViewById(R.id.connectButton);
-        forward = findViewById(R.id.fowardButton);
-        stop = findViewById(R.id.stopButton);
-        connectionStatus = findViewById(R.id.connectionStatus);
-        moveRight = findViewById(R.id.rightButton);
-        moveLeft = findViewById(R.id.leftButton);
-        moveBackward = findViewById(R.id.reverseButton);
+        final TextView connectionStatus = findViewById(R.id.connectionStatus);
+        Button connect = findViewById(R.id.connectButton);
+        Button moveForward = findViewById(R.id.fowardButton);
+        Button stop = findViewById(R.id.stopButton);
+        Button moveRight = findViewById(R.id.rightButton);
+        Button moveLeft = findViewById(R.id.leftButton);
+        Button moveBackward = findViewById(R.id.reverseButton);
 
         connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
-                    if(Client.clientSocket.isConnected()) {
-                        return;
-                    } else {
-                        Client.startConnection("192.168.1.33", 6197);
+                    if(!(Client.clientSocket.isConnected())) {
+                        char[] connected = "Connected".toCharArray();
+                        Client.startConnection("192.168.1.21");
                         connectionStatus.setText(connected, 0, connected.length);
                         connectionStatus.setTextColor(Color.GREEN);
                     }
@@ -53,58 +43,38 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        forward.setOnClickListener(new View.OnClickListener() {
+        moveForward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    Client.sendMessage("moveForward");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                Client.sendMessage("moveForward");
             }
         });
 
         moveBackward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    Client.sendMessage("moveBackward");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                Client.sendMessage("moveBackward");
             }
         });
 
         moveLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    Client.sendMessage("moveLeft");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                Client.sendMessage("moveLeft");
             }
         });
 
         moveRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    Client.sendMessage("moveRight");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                Client.sendMessage("moveRight");
             }
         });
 
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    Client.sendMessage("stop");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                Client.sendMessage("stop");
             }
         });
     }
