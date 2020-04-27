@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     if(!(Client.clientSocket.isConnected())) {
                         char[] connected = "Connected".toCharArray();
-                        Client.startConnection("192.168.1.21");
+                        Client.startConnection("73.50.89.25");
                         connectionStatus.setText(connected, 0, connected.length);
                         connectionStatus.setTextColor(Color.GREEN);
                     }
