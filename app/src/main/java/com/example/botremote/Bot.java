@@ -51,6 +51,12 @@ class Bot {
     private static GpioController iTwo = GpioFactory.getInstance();
     private static GpioController iThree = GpioFactory.getInstance();
     private static GpioController iFour = GpioFactory.getInstance();
+    /*/
+    enableOne enables/disables current flow for the left motor
+    enableTwo enables/disables current flow for the right motor
+    inOne and inTwo control current direction for left motor !!Both should never simultaneously be PinState.HIGH!!
+    inThree and inFour control current direction for right motor !!Both should never simultaneously be PinState.HIGH!!
+    */
     private static GpioPinDigitalOutput enableOne = eOne.provisionDigitalOutputPin(RaspiPin.GPIO_06, "", PinState.LOW);
     private static GpioPinDigitalOutput enableTwo = eTwo.provisionDigitalOutputPin(RaspiPin.GPIO_03, "", PinState.LOW);
     private static GpioPinDigitalOutput inOne = iOne.provisionDigitalOutputPin(RaspiPin.GPIO_04, "", PinState.LOW);
