@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import java.io.IOException;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,14 +27,13 @@ public class MainActivity extends AppCompatActivity {
         Button moveRight = findViewById(R.id.rightButton);
         Button moveLeft = findViewById(R.id.leftButton);
         Button moveBackward = findViewById(R.id.reverseButton);
-
         connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     if(!(Client.clientSocket.isConnected())) {
                         char[] connected = "Connected".toCharArray();
-                        Client.startConnection("73.50.89.25");
+                        Client.startConnection();
                         connectionStatus.setText(connected, 0, connected.length);
                         connectionStatus.setTextColor(Color.GREEN);
                     }
