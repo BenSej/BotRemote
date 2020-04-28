@@ -65,8 +65,8 @@ class Bot {
     private static GpioController iTwo = GpioFactory.getInstance();
     private static GpioController iThree = GpioFactory.getInstance();
     private static GpioController iFour = GpioFactory.getInstance();
-    private static GpioPinDigitalOutput enableOne = eOne.provisionDigitalOutputPin(RaspiPin.GPIO_06, "", PinState.LOW);
-    private static GpioPinDigitalOutput enableTwo = eTwo.provisionDigitalOutputPin(RaspiPin.GPIO_03, "", PinState.LOW);
+    private static GpioPinDigitalOutput enableOne = eOne.provisionDigitalOutputPin(RaspiPin.GPIO_06, "", PinState.HIGH);
+    private static GpioPinDigitalOutput enableTwo = eTwo.provisionDigitalOutputPin(RaspiPin.GPIO_03, "", PinState.HIGH);
     private static GpioPinDigitalOutput inOne = iOne.provisionDigitalOutputPin(RaspiPin.GPIO_04, "", PinState.LOW);
     private static GpioPinDigitalOutput inTwo = iTwo.provisionDigitalOutputPin(RaspiPin.GPIO_05, "", PinState.LOW);
     private static GpioPinDigitalOutput inThree = iThree.provisionDigitalOutputPin(RaspiPin.GPIO_02, "", PinState.LOW);
@@ -77,39 +77,29 @@ class Bot {
         inFour.low();
         inOne.high();
         inThree.high();
-        enableOne.high();
-        enableTwo.high();
     }
     static void stop () {
         inOne.low();
         inTwo.low();
         inThree.low();
         inFour.low();
-        enableOne.low();
-        enableTwo.low();
     }
     static void moveRight () {
         inTwo.low();
         inThree.low();
         inOne.high();
         inFour.high();
-        enableOne.high();
-        enableTwo.high();
     }
     static void moveLeft () {
         inOne.low();
         inFour.low();
         inTwo.high();
         inThree.high();
-        enableOne.high();
-        enableTwo.high();
     }
     static void moveBackward () {
         inOne.low();
         inThree.low();
         inTwo.high();
         inFour.high();
-        enableOne.high();
-        enableTwo.high();
     }
 }
