@@ -3,60 +3,70 @@ import java.net.*;
 import java.io.*;
 
 class Server {
-    private void start() throws IOException {
-        ServerSocket serverSocket = new ServerSocket(6197);
-        Socket clientSocket = serverSocket.accept();
+    public static Server server = new Server();
+    public static ServerSocket serverSocket;
+    public static Socket clientSocket;
+
+    public static void start() throws IOException {
+        serverSocket = new ServerSocket(6197);
+        System.out.println("Server listening on port 6197");
+        clientSocket = serverSocket.accept();
         System.out.println("Connected");
         BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
         String message;
-        while ((message = in.readLine()) != null) {
-            switch (message) {
-                case "moveForward":
-                    Bot.moveForward();
-                    System.out.println("Bot Moving Forwards");
-                    break;
-                case "moveBackward":
-                    Bot.moveBackward();
-                    System.out.println("Bot Moving Backwards");
-                    break;
-                case "moveRight":
-                    Bot.moveRight();
-                    System.out.println("Bot Moving Right");
-                    break;
-                case "moveLeft":
-                    Bot.moveLeft();
-                    System.out.println("Bot Moving Left");
-                    break;
-                case "stop":
-                    Bot.stop();
-                    System.out.println("Bot Stopped");
-                    break;
-                default:
-                    break;
+        try {
+            while ((message = in.readLine()) != null) {
+                switch (message) {
+                    case "moveForward":
+                        System.out.println("Bot Moving Forwards");
+                        Bot.moveForward();
+                        break;
+                    case "moveBackward":
+                        System.out.println("Bot Moving Backwards");
+                        Bot.moveBackward();
+                        break;
+                    case "moveRight":
+                        System.out.println("Bot Moving Right");
+                        Bot.moveRight();
+                        break;
+                    case "moveLeft":
+                        System.out.println("Bot Moving Left");
+                        Bot.moveLeft();
+                        break;
+                    case "stop":
+                        System.out.println("Bot Stopped");
+                        Bot.stop();
+                        break;
+                    default:
+                        break;
+                }
             }
+            System.out.println("client disconnected");
+            stop();
+            start();
+        } catch (IOException e) {
+            System.out.println("disconnected");
+            stop();
+            start();
         }
     }
-
+    public static void stop() throws IOException {
+        serverSocket.close();
+        clientSocket.close();
+    }
     public static void main(String[] args) throws IOException {
-        Server server = new Server();
-        server.start();
+        start();
     }
 }
 
 class Bot {
-    static private boolean stopped = true;
     private static GpioController eOne = GpioFactory.getInstance();
     private static GpioController eTwo = GpioFactory.getInstance();
     private static GpioController iOne = GpioFactory.getInstance();
     private static GpioController iTwo = GpioFactory.getInstance();
     private static GpioController iThree = GpioFactory.getInstance();
     private static GpioController iFour = GpioFactory.getInstance();
-    /*/
-    enableOne enables/disables current flow for the left motor
-    enableTwo enables/disables current flow for the right motor
-    inOne and inTwo control current direction for left motor !!Both should never simultaneously be PinState.HIGH!!
-    inThree and inFour control current direction for right motor !!Both should never simultaneously be PinState.HIGH!!
-    */
     private static GpioPinDigitalOutput enableOne = eOne.provisionDigitalOutputPin(RaspiPin.GPIO_06, "", PinState.LOW);
     private static GpioPinDigitalOutput enableTwo = eTwo.provisionDigitalOutputPin(RaspiPin.GPIO_03, "", PinState.LOW);
     private static GpioPinDigitalOutput inOne = iOne.provisionDigitalOutputPin(RaspiPin.GPIO_04, "", PinState.LOW);
@@ -65,13 +75,12 @@ class Bot {
     private static GpioPinDigitalOutput inFour = iFour.provisionDigitalOutputPin(RaspiPin.GPIO_00, "", PinState.LOW);
 
     static void moveForward () {
-        if (stopped) {
-            stopped = false;
-            inOne.high();
-            inThree.high();
-            enableOne.high();
-            enableTwo.high();
-        }
+        inTwo.low();
+        inFour.low();
+        inOne.high();
+        inThree.high();
+        enableOne.high();
+        enableTwo.high();
     }
     static void stop () {
         inOne.low();
@@ -80,32 +89,29 @@ class Bot {
         inFour.low();
         enableOne.low();
         enableTwo.low();
-        stopped = true;
     }
     static void moveRight () {
-        if (stopped) {
-            stopped = false;
-            inOne.high();
-            inFour.high();
-            enableOne.high();
-            enableTwo.high();
-        }
+        inTwo.low();
+        inThree.low();
+        inOne.high();
+        inFour.high();
+        enableOne.high();
+        enableTwo.high();
     }
     static void moveLeft () {
-        if (stopped) {
-            stopped = false;
-            inTwo.high();
-            inThree.high();
-            enableOne.high();
-            enableTwo.high();
-        }
+        inOne.low();
+        inFour.low();
+        inTwo.high();
+        inThree.high();
+        enableOne.high();
+        enableTwo.high();
     }
     static void moveBackward () {
-        if (stopped) {
-            inTwo.high();
-            inFour.high();
-            enableOne.high();
-            enableTwo.high();
-        }
+        inOne.low();
+        inThree.low();
+        inTwo.high();
+        inFour.high();
+        enableOne.high();
+        enableTwo.high();
     }
 }
