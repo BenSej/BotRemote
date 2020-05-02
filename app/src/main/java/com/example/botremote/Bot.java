@@ -1,6 +1,8 @@
 import com.pi4j.io.gpio.*;
 import java.net.*;
 import java.io.*;
+import java.util.List;
+import java.util.ArrayList;
 
 class Server {
     private static ServerSocket serverSocket;
@@ -101,5 +103,36 @@ class Bot {
         inFour.low();
         inOne.high();
         inThree.high();
+    }
+}
+public class Command {
+    private List<String> commands = new ArrayList<String>();
+    public Programmed(List<String> input) {
+        for (int counter = 0; counter < input.size(); counter++) {
+            commands.add(input.get(counter), 0);
+        }
+    }
+    public void enact(List<String> input) {
+        for (int counter = 0; counter < input.size(); counter++) {
+            if (input.get(counter).equals("moveForward")) {
+                Bot.moveForward();
+                wait(2000);
+                Bot.stop();
+            } else if (input.get(counter).equals("moveBackward")) {
+                Bot.moveBackward();
+                wait(2000);
+                Bot.stop();
+            } else if (input.get(counter).equals("moveLeft")) {
+                Bot.moveLeft();
+                wait(2000);
+                Bot.stop();
+            } else if (input.get(counter).equals("moveRight")) {
+                Bot.moveRight();
+                wait(2000);
+                Bot.stop();
+            } else {
+                Bot.stop();
+            }
+        }
     }
 }
