@@ -107,13 +107,15 @@ class Bot {
 }
 public class Command {
     private List<String> commands = new ArrayList<String>();
+
     public Programmed(List<String> input) {
         for (int counter = 0; counter < input.size(); counter++) {
             commands.add(input.get(counter), 0);
         }
     }
+
     public void enact(List<String> input) {
-        for (int counter = 0; counter < input.size(); counter++) {
+        for (int counter = 0; counter < 10; counter++) {
             if (input.get(counter).equals("moveForward")) {
                 Bot.moveForward();
                 wait(2000);
@@ -132,7 +134,10 @@ public class Command {
                 Bot.stop();
             } else {
                 Bot.stop();
+                return
             }
         }
+        Bot.stop();
+        return;
     }
 }
