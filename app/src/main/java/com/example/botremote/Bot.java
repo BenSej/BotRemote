@@ -73,10 +73,10 @@ class Bot {
     private static GpioPinDigitalOutput inFour = iFour.provisionDigitalOutputPin(RaspiPin.GPIO_00, "", PinState.LOW);
 
     static void moveForward () {
-        inTwo.low();
-        inFour.low();
-        inOne.high();
-        inThree.high();
+        inOne.low();
+        inThree.low();
+        inTwo.high();
+        inFour.high();
     }
     static void stop () {
         inOne.low();
@@ -85,21 +85,21 @@ class Bot {
         inFour.low();
     }
     static void moveRight () {
-        inTwo.low();
         inThree.low();
-        inOne.high();
+        inTwo.low();
+        inOne.low();
         inFour.high();
     }
     static void moveLeft () {
         inOne.low();
+        inThree.low();
         inFour.low();
         inTwo.high();
-        inThree.high();
     }
     static void moveBackward () {
-        inOne.low();
-        inThree.low();
-        inTwo.high();
-        inFour.high();
+        inTwo.low();
+        inFour.low();
+        inOne.high();
+        inThree.high();
     }
 }
