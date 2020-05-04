@@ -18,7 +18,7 @@ class Server {
         try {
             while ((message = in.readLine()) != null) {
                 switch (message) {
-                    case "playRecording":
+                    /*case "playRecording":
                         System.out.println("Playing Recording");
                         Command.enact(commands);
                         break;
@@ -26,6 +26,8 @@ class Server {
                         System.out.println("Recording Started");
                         record();
                         break;
+
+                     */
                     case "moveForward":
                         System.out.println("Bot Moving Forwards");
                         Bot.moveForward();
@@ -60,6 +62,7 @@ class Server {
         }
     }
 
+    /*
     private void record() {
         serverSocket = new ServerSocket(6197);
         //System.out.println("Server listening on port 6197");
@@ -108,6 +111,8 @@ class Server {
             start();
         }
     }
+
+     */
 
     private static void stop() throws IOException {
         serverSocket.close();
