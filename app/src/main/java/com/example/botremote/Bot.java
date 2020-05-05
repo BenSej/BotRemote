@@ -15,35 +15,62 @@ class Server {
         System.out.println("Connected");
         BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         String message;
+        boolean isRecording = false;
         try {
             while ((message = in.readLine()) != null) {
                 switch (message) {
-                    /*case "playRecording":
+                    case "endRecording":
+                        System.out.println("Recording Ended");
+                        isRecording = false;
+                        break;
+                    case "playRecording":
                         System.out.println("Playing Recording");
                         Command.enact(commands);
                         break;
                     case "startRecording":
                         System.out.println("Recording Started");
-                        record();
+                        isRecording = true;
                         break;
-
-                     */
                     case "moveForward":
-                        System.out.println("Bot Moving Forwards");
-                        Bot.moveForward();
-                        break;
+                        if (isRecording) {
+                            System.out.println("Bot To Move Forward Recorded");
+                            Command.addRecording("moveForward");
+                            break;
+                        } else {
+                            System.out.println("Bot Moving Forwards");
+                            Bot.moveForward();
+                            break;
+                        }
                     case "moveBackward":
-                        System.out.println("Bot Moving Backwards");
-                        Bot.moveBackward();
-                        break;
+                        if (isRecording) {
+                            System.out.println("Bot To Move Backward Recorded");
+                            Command.addRecording("moveBackward");
+                            break;
+                        } else {
+                            System.out.println("Bot Moving Backwards");
+                            Bot.moveBackward();
+                            break;
+                        }
                     case "moveRight":
-                        System.out.println("Bot Moving Right");
-                        Bot.moveRight();
-                        break;
+                        if (isRecording) {
+                            System.out.println("Bot To Move Right Recorded");
+                            Command.addRecording("moveRight");
+                            break;
+                        } else {
+                            System.out.println("Bot Moving Right");
+                            Bot.moveRight();
+                            break;
+                        }
                     case "moveLeft":
-                        System.out.println("Bot Moving Left");
-                        Bot.moveLeft();
-                        break;
+                        if (isRecording) {
+                            System.out.println("Bot To Move Left Recorded");
+                            Command.addRecording("moveLeft");
+                            break;
+                        } else {
+                            System.out.println("Bot Moving Left");
+                            Bot.moveLeft();
+                            break;
+                        }
                     case "stop":
                         System.out.println("Bot Stopped");
                         Bot.stop();
@@ -61,58 +88,6 @@ class Server {
             start();
         }
     }
-
-    /*
-    private void record() {
-        serverSocket = new ServerSocket(6197);
-        //System.out.println("Server listening on port 6197");
-        clientSocket = serverSocket.accept();
-        //System.out.println("Connected");
-        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        String message;
-        List<String> recording = new ArrayList<String>();
-        int count = 0;
-        try {
-            while ((message = in.readLine()) != null || count < 10) {
-                switch (message) {
-                    case "endRecording":
-                        recording.add("endRecording");
-                        System.out.println("Recording Ended");
-                        start();
-                        break;
-                    case "moveForward":
-                        recording.add("moveForward");
-                        System.out.println("Bot Moving forward Recorded");
-                        count++;
-                        break;
-                    case "moveBackward":
-                        recording.add("moveBackward");
-                        System.out.println("Bot Moving Backwards");
-                        count++;
-                        break;
-                    case "moveRight":
-                        recording.add("moveRight");
-                        System.out.println("Bot Moving Right Recorded");
-                        count++;
-                        break;
-                    case "moveLeft":
-                        recording.add("moveLeft");
-                        System.out.println("Bot Moving Left Recorded");
-                        count++;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            System.out.println("Recording Ended");
-        } catch (IOException e) {
-            System.out.println("Recording Error: Bot Disconnected");
-            stop();
-            start();
-        }
-    }
-
-     */
 
     private static void stop() throws IOException {
         serverSocket.close();
@@ -171,8 +146,8 @@ class Bot {
 public class Command {
     private static List<String> commands = new ArrayList<String>();
 
-    public Programmed(List<String> input) {
-        commands = input;
+    public void addRecording(String input) {
+        commands.add(input);
     }
 
     public static void enact(List<String> input) {
